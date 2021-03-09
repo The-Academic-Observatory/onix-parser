@@ -1,0 +1,4 @@
+dependency-reduced-pom.xml
+*.jsonl
+pkg/
+target/
