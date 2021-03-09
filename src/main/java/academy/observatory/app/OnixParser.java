@@ -65,6 +65,11 @@ public class OnixParser {
 		parseOnix(input_directory, output_directory);
 	}
 
+	/**
+	 * Parse ONIX records. Write out records to full/update/delete json files.
+	 * @param input_directory File object for input directory.
+	 * @param output_directory String object for output directory.
+	 */
 	public static void parseOnix(File input_directory, String output_directory) {
 		create_directory_if_missing(output_directory);
 
