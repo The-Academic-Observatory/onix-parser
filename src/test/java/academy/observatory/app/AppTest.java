@@ -285,7 +285,7 @@ public class AppTest
     public static void deleteTestFolder()
     {
         File output_directory = new File(OUTPUT_DIR);
-        // deleteFiles(output_directory);
+        deleteFiles(output_directory);
     }
 
     public static void deleteFiles(File file)
