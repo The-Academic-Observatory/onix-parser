@@ -15,6 +15,11 @@
  * Author: Tuan Chien
 */
 
+/*
+ * ONIX for Books specifications can be found at:
+ * https://www.editeur.org/83/Overview/
+ */
+
 package academy.observatory.app;
 
 import java.io.File;
