@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+	<ONIXMessage release="3.0">
+	<Header>
+		<Sender>
+	
+			<SenderName>Academic Observatory</SenderName>
+			<EmailAddress>test@test.data</EmailAddress>
+		</Sender>
+		<MessageNumber>1</MessageNumber>
+		<SentDateTime>20210215T0303Z</SentDateTime>
+	</Header>
+	<Product>
+		<RecordReference>some.test.data</RecordReference>
+		<NotificationType>05</NotificationType>
+		<RecordSourceType>04</RecordSourceType>
+		<RecordSourceIdentifier>
+			<RecordSourceIDType>06</RecordSourceIDType>
+			<IDValue>0000000000000</IDValue>
+		</RecordSourceIdentifier>
+		<RecordSourceName>Academic Observatory</RecordSourceName>
+		<ProductIdentifier>
+			<ProductIDType>03</ProductIDType>
+			<IDValue>9780000000000</IDValue>
+		</ProductIdentifier>
+		<ProductIdentifier>
+			<ProductIDType>15</ProductIDType>
+			<IDValue>9780000000000</IDValue>
+		</ProductIdentifier>
+		<!-- there is no Block 1 -->
+		<!-- there is no Block 2 -->
+		<!-- there is no Block 3 -->
+		<!-- there is no Block 4 -->
+		<!-- there is no Block 5 -->
+	</Product>
+</ONIXMessage>

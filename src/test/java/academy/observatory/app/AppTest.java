@@ -61,7 +61,7 @@ public class AppTest
 
         assert(object.getString("RecordSourceName").equals("Academic Observatory"));
 
-        assert(object.getString("RecordSourceType").equals("04"));
+        assert(object.getString("RecordSourceType").equals("Bibliographic agency"));
         assert(object.getString("RecordRef").equals("some.test.data"));
         assert(object.getString("CountryOfManufacture").equals("NZ"));
         assert(object.getString("GTIN_13").equals("9780000000000"));
@@ -71,52 +71,52 @@ public class AppTest
         Object lang1 = languages.get(0);
         JSONObject lang1o = (JSONObject)lang1;
         assert(lang1o.getString("LanguageCode").equals("eng"));
-        assert(lang1o.getString("LanguageRole").equals("01"));
+        assert(lang1o.getString("LanguageRole").equals("Language of text"));
 
         JSONArray extent = object.getJSONArray("Extent");
         Object ext1 = extent.get(0);
         JSONObject ext1o = (JSONObject)ext1;
-        assert(ext1o.getString("ExtentUnit").equals("03"));
+        assert(ext1o.getString("ExtentUnit").equals("Pages"));
         assert(ext1o.getLong("ExtentValue") == 100);
-        assert(ext1o.getString("ExtentType").equals("07"));
+        assert(ext1o.getString("ExtentType").equals("Absolute page count"));
 
         JSONArray titledetails = object.getJSONArray("TitleDetails");
         Object td1 = titledetails.get(0);
         JSONObject td1o = (JSONObject)td1;
 
-        assert(td1o.getString("TitleType").equals("01"));
+        assert(td1o.getString("TitleType").equals("Distinctive title (book); Cover title (serial); Title on item (serial content item or reviewed resource)"));
 
         JSONArray te = td1o.getJSONArray("TitleElements");
         Object te1 = te.get(0);
         JSONObject te1o = (JSONObject)te1;
         assert(te1o.getString("TitleWithoutPrefix").equals("TestTitle"));
         assert(te1o.getLong("SequenceNumber")==1);
-        assert(te1o.getString("TitleWithoutPrefix_TextCaseFlags").equals("01"));
-        assert(te1o.getString("TitleElementLevel").equals("01"));
+        assert(te1o.getString("TitleWithoutPrefix_TextCaseFlags").equals("Sentence case"));
+        assert(te1o.getString("TitleElementLevel").equals("Product"));
         assert(te1o.getString("Subtitle").equals("Subtitle text"));
 
         Object td2 = titledetails.get(1);
         JSONObject td2o = (JSONObject)td2;
-        assert(td2o.getString("TitleType").equals("10"));
+        assert(td2o.getString("TitleType").equals("Distributor\u2019s title"));
         JSONArray te2a = td2o.getJSONArray("TitleElements");
         Object te2 = te2a.get(0);
         JSONObject te2o = (JSONObject)te2;
         assert(te2o.getString("TitleText").equals("TestTitle Book"));
-        assert(te2o.getString("TitleElementLevel").equals("01"));
+        assert(te2o.getString("TitleElementLevel").equals("Product"));
 
         JSONArray pubdates = object.getJSONArray("PublishingDates");
         Object pubdate1 = pubdates.get(0);
         JSONObject pd1 = (JSONObject)pubdate1;
         assert(pd1.getString("Date").equals("20200101"));
-        assert(pd1.getString("PublishingDateRole").equals("01"));
+        assert(pd1.getString("PublishingDateRole").equals("Publication date"));
         Object pubdate2 = pubdates.get(1);
         JSONObject pd2 = (JSONObject)pubdate2;
         assert(pd2.getString("Date").equals("2020"));
-        assert(pd2.getString("PublishingDateRole").equals("11"));
+        assert(pd2.getString("PublishingDateRole").equals("Date of first publication"));
         Object pubdate3 = pubdates.get(2);
         JSONObject pd3 = (JSONObject)pubdate3;
         assert(pd3.getString("Date").equals("2020"));
-        assert(pd3.getString("PublishingDateRole").equals("20"));
+        assert(pd3.getString("PublishingDateRole").equals("Date of first publication in original language"));
 
         JSONArray contributors = object.getJSONArray("Contributors");
         Object contrib1 = contributors.get(0);
@@ -130,14 +130,14 @@ public class AppTest
         JSONArray croles = c1o.getJSONArray("Roles");
         Object cr1 = croles.get(0);
         String cr1o = (String)cr1;
-        assert(cr1.equals("A01"));
+        assert(cr1.equals("By (author)"));
         assert(c1o.getString("Proprietary").equals("1111"));
 
         JSONArray cr1b = c1o.getJSONArray("BiographicalNotes");
         Object cr1b1 = cr1b.get(0);
         JSONObject cr1b1o = (JSONObject)cr1b1;
         assert(cr1b1o.getString("Note").equals("Some note."));
-        assert(cr1b1o.getString("TextFormat").equals("05"));
+        assert(cr1b1o.getString("TextFormat").equals("XHTML"));
 
         Object contrib2 = contributors.get(1);
         JSONObject c2o = (JSONObject)contrib2;
@@ -149,26 +149,26 @@ public class AppTest
         JSONArray croles2 = c2o.getJSONArray("Roles");
         Object cr2 = croles2.get(0);
         String cr2o = (String)cr2;
-        assert(cr2o.equals("A01"));
+        assert(cr2o.equals("By (author)"));
         assert(c2o.getString("Proprietary").equals("7422"));
 
         JSONArray cr2b = c2o.getJSONArray("BiographicalNotes");
         Object cr2b1 = cr2b.get(0);
         JSONObject cr2b1o = (JSONObject)cr2b1;
         assert(cr2b1o.getString("Note").equals("Some note."));
-        assert(cr2b1o.getString("TextFormat").equals("05"));
+        assert(cr2b1o.getString("TextFormat").equals("XHTML"));
 
         JSONArray pubs = object.getJSONArray("Publishers");
         Object pubs1 = pubs.get(0);
         JSONObject pubs1o = (JSONObject)pubs1;
-        assert(pubs1o.getString("PublishingRole").equals("01"));
+        assert(pubs1o.getString("PublishingRole").equals("Publisher"));
         assert(pubs1o.getString("PublisherName").equals("Academic Observatory"));
 
         JSONArray pubs1web = pubs1o.getJSONArray("Websites");
         Object pubs1web1 = pubs1web.get(0);
         JSONObject pubs1web1o = (JSONObject)pubs1web1;
 
-        assert(pubs1web1o.getString("WebsiteRole").equals("01"));
+        assert(pubs1web1o.getString("WebsiteRole").equals("Publisher\u2019s corporate website"));
 
         JSONArray pubs1web1links = pubs1web1o.getJSONArray("WebsiteLinks");
         Object pubs1web1links1 = pubs1web1links.get(0);
@@ -192,7 +192,7 @@ public class AppTest
         Object txtcont1t1 = txtcont1t.get(0);
         String txtcont1t1o = (String)txtcont1t1;
         assert(txtcont1t1o.equals("Some text."));
-        assert(txtcont1o.getString("TextType").equals("02"));
+        assert(txtcont1o.getString("TextType").equals("Short description/annotation"));
 
         Object txtcont2 = textcontent.get(1);
         JSONObject txtcont2o = (JSONObject)txtcont2;
@@ -200,7 +200,7 @@ public class AppTest
         Object txtcont2t1 = txtcont2t.get(0);
         String txtcont2t1o = (String)txtcont2t1;
         assert(txtcont2t1o.equals("More text."));
-        assert(txtcont2o.getString("TextType").equals("03"));
+        assert(txtcont2o.getString("TextType").equals("Description"));
 
         Object txtcont3 = textcontent.get(2);
         JSONObject txtcont3o = (JSONObject)txtcont3;
@@ -208,7 +208,7 @@ public class AppTest
         Object txtcont3t1 = txtcont3t.get(0);
         String txtcont3t1o = (String)txtcont3t1;
         assert(txtcont3t1o.equals("TOC."));
-        assert(txtcont3o.getString("TextType").equals("04"));
+        assert(txtcont3o.getString("TextType").equals("Table of contents"));
 
         JSONArray subjects = object.getJSONArray("Subjects");
         Object subjects1 = subjects.get(0);
@@ -253,7 +253,7 @@ public class AppTest
 
         assert(object.getString("RecordRef").equals("some.test.data"));
         assert(object.getString("ISBN13").equals("9780000000000"));
-        assert(object.getString("RecordSourceType").equals("04"));
+        assert(object.getString("RecordSourceType").equals("Bibliographic agency"));
         assert(object.getString("GTIN_13").equals("9781111111111"));
     }
 
@@ -277,7 +277,7 @@ public class AppTest
 
         assert(object.getString("RecordRef").equals("some.test.data"));
         assert(object.getString("ISBN13").equals("9780000000000"));
-        assert(object.getString("RecordSourceType").equals("04"));
+        assert(object.getString("RecordSourceType").equals("Bibliographic agency"));
         assert(object.getString("GTIN_13").equals("9780000000000"));
     }
 

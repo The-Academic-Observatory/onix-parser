@@ -183,7 +183,7 @@ public class OnixParser {
 			jsonline.put("RecordSourceName", product.recordSourceName().value);
 
 		if (product.recordSourceType().exists())
-			jsonline.put("RecordSourceType", product.recordSourceType().value.code);
+			jsonline.put("RecordSourceType", product.recordSourceType().value.description);
 
 		processRecordReference(product.recordReference(), jsonline);
 		processProductIdentifiers(product.productIdentifiers(), jsonline);
@@ -250,7 +250,7 @@ public class OnixParser {
 		jsonline.put("ImprintName", iname.value);
 
 		if(iname.language != null) {
-			jsonline.put("ImprintName_lang", iname.language.code);
+			jsonline.put("ImprintName_lang", iname.language.description);
 		}
 	}
 
@@ -312,11 +312,11 @@ public class OnixParser {
 			jl_pubdate.put("Date", pubdate.date().value);
 
 			if (pubdate.dateFormat().exists()) {
-				jl_pubdate.put("DateFormat", pubdate.dateFormat().value.code);
+				jl_pubdate.put("DateFormat", pubdate.dateFormat().value.description);
 			}
 
 			if (pubdate.publishingDateRole().exists()) {
-				jl_pubdate.put("PublishingDateRole", pubdate.publishingDateRole().value.code);
+				jl_pubdate.put("PublishingDateRole", pubdate.publishingDateRole().value.description);
 			}
 
 			jl_pubdates.put(jl_pubdate);
@@ -338,7 +338,7 @@ public class OnixParser {
 			JSONObject jl_publisher = new JSONObject();
 
 			jl_publisher.put("PublisherName", publisher.publisherName().value);
-			jl_publisher.put("PublishingRole", publisher.publishingRole().value.code);
+			jl_publisher.put("PublishingRole", publisher.publishingRole().value.description);
 			processWebsites(publisher.websites(), jl_publisher);
 			// identifiers
 			// websites
@@ -387,7 +387,7 @@ public class OnixParser {
 			jl_text_content.put("Text", texts);
 
 			if (text_content.textType().exists()) {
-				jl_text_content.put("TextType", text_content.textType().value.code);
+				jl_text_content.put("TextType", text_content.textType().value.description);
 			}
 
 			jl_text_contents.put(jl_text_content);
@@ -491,7 +491,7 @@ public class OnixParser {
 		JSONArray jl_etypes = new JSONArray();
 
 		for (EditionType etype : etypes) {
-			jl_etypes.put(etype.value.code);
+			jl_etypes.put(etype.value.description);
 		}
 
 		jsonline.put("EditionType", jl_etypes);
@@ -510,8 +510,8 @@ public class OnixParser {
 		for (Extent extent : extents) {
 			JSONObject jl_extent = new JSONObject();
 
-			jl_extent.put("ExtentType", extent.extentType().value.code);
-			jl_extent.put("ExtentUnit", extent.extentUnit().value.code);
+			jl_extent.put("ExtentType", extent.extentType().value.description);
+			jl_extent.put("ExtentUnit", extent.extentUnit().value.description);
 			jl_extent.put("ExtentValue", extent.extentValue().value);
 			jl_extent.put("ExtentValueRoman", extent.extentValueRoman().value);
 
@@ -547,11 +547,11 @@ public class OnixParser {
 			}
 
 			if (language.languageRole().exists()) {
-				jl_language.put("LanguageRole", language.languageRole().value.code);
+				jl_language.put("LanguageRole", language.languageRole().value.description);
 			}
 
 			if (language.scriptCode().exists()) {
-				jl_language.put("ScriptCode", language.scriptCode().value.code);
+				jl_language.put("ScriptCode", language.scriptCode().value.description);
 			}
 
 			jl_languages.put(jl_language);
@@ -572,7 +572,7 @@ public class OnixParser {
 		for (TitleDetail detail : details) {
 			JSONObject jl_detail = new JSONObject();
 
-			jl_detail.put("TitleType", detail.titleType().value.code);
+			jl_detail.put("TitleType", detail.titleType().value.description);
 			jl_detail.put("TitleStatement", detail.titleStatement().value);
 			processTitleElements(detail.titleElements(), jl_detail);
 
@@ -596,7 +596,7 @@ public class OnixParser {
 			JSONObject jl_element = new JSONObject();
 
 			jl_element.put("SequenceNumber", element.sequenceNumber().value);
-			jl_element.put("TitleElementLevel", element.titleElementLevel().value.code);
+			jl_element.put("TitleElementLevel", element.titleElementLevel().value.description);
 			jl_element.put("YearOfAnnual", element.yearOfAnnual().value);
 
 			processPartNumber(element.partNumber(), jl_element);
@@ -623,15 +623,15 @@ public class OnixParser {
 		}
 
 		if (tt.language != null) {
-			jsonline.put("TitleText_Language", tt.language.code);
+			jsonline.put("TitleText_Language", tt.language.description);
 		}
 
 		if (tt.textscript != null) {
-			jsonline.put("TitleText_TextScript", tt.textscript.code);
+			jsonline.put("TitleText_TextScript", tt.textscript.description);
 		}
 
 		if (tt.textcase != null) {
-			jsonline.put("TitleText_TextCaseFlags", tt.textcase.code);
+			jsonline.put("TitleText_TextCaseFlags", tt.textcase.description);
 		}
 
 		jsonline.put("TitleText", tt.value);
@@ -650,8 +650,8 @@ public class OnixParser {
 			return;
 		}
 
-		jl_pnum.put("Language", pnum.language.code);
-		jl_pnum.put("TextScript", pnum.textscript.code);
+		jl_pnum.put("Language", pnum.language.description);
+		jl_pnum.put("TextScript", pnum.textscript.description);
 		jl_pnum.put("Value", pnum.value);
 
 		jsonline.put("PartNumber", jl_pnum);
@@ -669,15 +669,15 @@ public class OnixParser {
 		}
 
 		if (tpref.language != null) {
-			jsonline.put("TitleWithoutPrefix_LanguageCode", tpref.language.code);
+			jsonline.put("TitleWithoutPrefix_LanguageCode", tpref.language.description);
 		}
 
 		if (tpref.textscript != null) {
-			jsonline.put("TitleWithoutPrefix_TextScript", tpref.textscript.code);
+			jsonline.put("TitleWithoutPrefix_TextScript", tpref.textscript.description);
 		}
 
 		if (tpref.textcase != null) {
-			jsonline.put("TitleWithoutPrefix_TextCaseFlags", tpref.textcase.code);
+			jsonline.put("TitleWithoutPrefix_TextCaseFlags", tpref.textcase.description);
 		}
 
 		jsonline.put("TitleWithoutPrefix", tpref.value);
@@ -697,15 +697,15 @@ public class OnixParser {
 		}
 
 		if (tpref.language != null) {
-			jl_tpref.put("Language", tpref.language.code);
+			jl_tpref.put("Language", tpref.language.description);
 		}
 
 		if (tpref.textscript != null) {
-			jl_tpref.put("TextScript", tpref.textscript.code);
+			jl_tpref.put("TextScript", tpref.textscript.description);
 		}
 
 		if (tpref.textcase != null) {
-			jl_tpref.put("TextCaseFlags", tpref.textcase.code);
+			jl_tpref.put("TextCaseFlags", tpref.textcase.description);
 		}
 
 		jl_tpref.put("Value", tpref.value);
@@ -727,15 +727,15 @@ public class OnixParser {
 		}
 
 		if (subtitle.language != null) {
-			jsonline.put("Subtitle_Language", subtitle.language.code);
+			jsonline.put("Subtitle_Language", subtitle.language.description);
 		}
 
 		if (subtitle.textscript != null) {
-			jsonline.put("Subtitle_TextScript", subtitle.textscript.code);
+			jsonline.put("Subtitle_TextScript", subtitle.textscript.description);
 		}
 
 		if (subtitle.textcase != null) {
-			jsonline.put("Subtitle_TextCaseFlags", subtitle.textcase.code);
+			jsonline.put("Subtitle_TextCaseFlags", subtitle.textcase.description);
 		}
 
 		// jl_subtitle.put("Value", subtitle.value);
@@ -769,7 +769,7 @@ public class OnixParser {
 			jl_subject.put("SubjectSchemeName", subject.subjectSchemeName().value);
 
 			if (subject.subjectSchemeName().language != null) {
-				jl_subject.put("SubjectSchemeNameLanguage", subject.subjectSchemeName().language.code);
+				jl_subject.put("SubjectSchemeNameLanguage", subject.subjectSchemeName().language.description);
 			}
 
 			jl_subjects.put(jl_subject);
@@ -795,7 +795,7 @@ public class OnixParser {
 			jl_contributor.put("NamesBeforeKey", contributor.namesBeforeKey().value);
 
 			if (contributor.nameType().exists()) {
-				jl_contributor.put("NameType", contributor.nameType().value.code);
+				jl_contributor.put("NameType", contributor.nameType().value.description);
 			}
 
 			jl_contributor.put("LettersAfterNames", contributor.lettersAfterNames().value);
@@ -804,7 +804,7 @@ public class OnixParser {
 			jl_contributor.put("CorprorateNameInverted", contributor.corporateNameInverted().value);
 
 			if (contributor.unnamedPersons().value != null) {
-				jl_contributor.put("UnnamedPersons", contributor.unnamedPersons().value.code);
+				jl_contributor.put("UnnamedPersons", contributor.unnamedPersons().value.description);
 			}
 
 			if (contributor.gender().value != null) {
@@ -849,11 +849,11 @@ public class OnixParser {
 			JSONObject jl_note = new JSONObject();
 
 			if (note.language != null) {
-				jl_note.put("Language", note.language.code);
+				jl_note.put("Language", note.language.description);
 			}
 
 			if (note.textformat != null) {
-				jl_note.put("TextFormat", note.textformat.code);
+				jl_note.put("TextFormat", note.textformat.description);
 			}
 
 			jl_note.put("Note", note.value);
@@ -877,7 +877,7 @@ public class OnixParser {
 			JSONObject jl_website = new JSONObject();
 
 			if (website.websiteRole().exists()) {
-				jl_website.put("WebsiteRole", website.websiteRole().value.code);
+				jl_website.put("WebsiteRole", website.websiteRole().value.description);
 			}
 
 			processWebsiteDescriptions(website.websiteDescriptions(), jl_website);
@@ -949,7 +949,7 @@ public class OnixParser {
 			jl_alt_name.put("NamesBeforeKey", alt_name.namesBeforeKey().value);
 
 			if (alt_name.nameType().exists()) {
-				jl_alt_name.put("NameType", alt_name.nameType().value.code);
+				jl_alt_name.put("NameType", alt_name.nameType().value.description);
 			}
 
 			jl_alt_name.put("PersonName", alt_name.personName().value);
@@ -979,9 +979,9 @@ public class OnixParser {
 		for (ContributorDate date : dates) {
 			JSONObject jl_date = new JSONObject();
 
-			jl_date.put("Role", date.contributorDateRole().value.code);
+			jl_date.put("Role", date.contributorDateRole().value.description);
 			jl_date.put("Date", date.date().value);
-			jl_date.put("Format", date.dateFormat().value.code);
+			jl_date.put("Format", date.dateFormat().value.description);
 
 			jl_dates.put(jl_date);
 		}
@@ -1004,8 +1004,8 @@ public class OnixParser {
 			JSONArray location_names = new JSONArray();
 
 			jl_place.put("Relation", place.contributorPlaceRelator().value.description);
-			jl_place.put("CountryCode", place.countryCode().value.code);
-			jl_place.put("RegionCode", place.regionCode().value.code);
+			jl_place.put("CountryCode", place.countryCode().value.description);
+			jl_place.put("RegionCode", place.regionCode().value.description);
 
 			for (LocationName location : place.locationNames()) {
 				location_names.put(location.value);
@@ -1029,7 +1029,7 @@ public class OnixParser {
 		JSONArray str_roles = new JSONArray();
 
 		for (ContributorRole role : roles) {
-			str_roles.put(role.value.code);
+			str_roles.put(role.value.description);
 		}
 
 		jsonline.put("Roles", str_roles);
