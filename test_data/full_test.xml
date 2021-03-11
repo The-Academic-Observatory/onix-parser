@@ -79,7 +79,17 @@
 				<KeyNames>KeyName</KeyNames>
 				<BiographicalNote textformat="05">Some note.</BiographicalNote>
 			</Contributor>
-			<NoEdition/>
+      <EditionNumber>1</EditionNumber>
+      <Collection>
+        <CollectionType>10</CollectionType>
+        <TitleDetail>
+          <TitleType>01</TitleType>
+          <TitleElement>
+            <TitleElementLevel>02</TitleElementLevel>
+            <TitleText>Some series</TitleText>
+          </TitleElement>
+        </TitleDetail>
+      </Collection>
 			<Language>
 				<LanguageRole>01</LanguageRole>
 				<LanguageCode>eng</LanguageCode>
@@ -153,5 +163,22 @@
 				<Date dateformat="05">2020</Date>
 			</PublishingDate>
 		</PublishingDetail>
+    <RelatedMaterial>
+      <RelatedWork>
+        <!--Product is a manifestation of-->
+        <WorkRelationCode>01</WorkRelationCode>
+        <WorkIdentifier>
+          <!--Proprietary system identifier for the work-->
+          <WorkIDType>01</WorkIDType>
+          <IDTypeName>some proprietary id</IDTypeName>
+          <IDValue>0000000000</IDValue>
+        </WorkIdentifier>
+        <WorkIdentifier>
+          <!--Work DOI-->
+          <WorkIDType>06</WorkIDType>
+          <IDValue>somedoi</IDValue>
+        </WorkIdentifier>
+      </RelatedWork>
+    </RelatedMaterial>
 	</Product>
 </ONIXMessage>
