@@ -195,11 +195,68 @@ public class OnixParser {
 		processCollateralDetail(product.collateralDetail(), jsonline);
 		// processContentDetail(product.contentDetail(), jsonline);
 		processDescriptiveDetail(product.descriptiveDetail(), jsonline);
-		// processRelatedMaterial(product.relatedMaterial(), jsonline);
+		processRelatedMaterial(product.relatedMaterial(), jsonline);
 		processPublishingDetail(product.publishingDetail(), jsonline);
 		// process
 
 		return jsonline;
+	}
+
+	/**
+	 * Process RelatedMaterial records.
+	 * @param rel_mat     Related material object.
+	 * @param jsonline    JSON object to write to.
+	 */
+	private static void processRelatedMaterial(RelatedMaterial rel_mat, JSONObject jsonline) {
+		// processRelatedProducts()
+		processRelatedWorks(rel_mat.relatedWorks(), jsonline);
+	}
+
+	/**
+	 * Process RelatedWorks records.
+	 * @param rel_works  List of RelatedWork record.
+	 * @param jsonline   JSON object to write to.
+	 */
+	private static void processRelatedWorks(List<RelatedWork> rel_works,  JSONObject jsonline) {
+		JSONArray jl_rel_works = new JSONArray();
+
+		for(RelatedWork rel_work : rel_works) {
+			JSONObject jl_rel_work = new JSONObject();
+
+			if(rel_work.workRelationCode().value != null) {
+				jl_rel_work.put("WorkRelationCode", rel_work.workRelationCode().value.description);
+			}
+
+			processWorkIdentifiers(rel_work.workIdentifiers(), jl_rel_work);
+
+			jl_rel_works.put(jl_rel_work);
+		}
+
+		jsonline.put("RelatedWorks", jl_rel_works);
+	}
+
+	/**
+	 * Process WorkIdentifier records.
+	 * @param work_ids  List of WorkIdentifier records.
+	 * @param jsonline  JSON object to write to.
+	 */
+	private static void processWorkIdentifiers(ListOfOnixDataCompositeWithKey<WorkIdentifier,JonixWorkIdentifier,WorkIdentifierTypes> work_ids, JSONObject jsonline) {
+		JSONArray jl_work_ids = new JSONArray();
+
+		for(WorkIdentifier work_id : work_ids) {
+			JSONObject jl_work_id = new JSONObject();
+
+			jl_work_id.put("IDTypeName", work_id.idTypeName().value);
+			jl_work_id.put("IDValue", work_id.idValue().value);
+
+			if(work_id.workIDType().value != null) {
+				jl_work_id.put("WorkIDType", work_id.workIDType().value.description);
+			}
+
+			jl_work_ids.put(jl_work_id);
+		}
+
+		jsonline.put("WorkIdentifiers", jl_work_ids);
 	}
 
 	/**
@@ -484,6 +541,55 @@ public class OnixParser {
 		processLanguages(dd.languages(), jsonline);
 		processEditionTypes(dd.editionTypes(), jsonline);
 		processExtents(dd.extents(), jsonline);
+		
+		if(!dd.isNoCollection()) {
+			processCollections(dd.collections(), jsonline);
+		}
+	}
+
+	/**
+	 * Process Collection information.
+	 * @param collections List of collection records.
+	 * @param jsonline    JSON object to write to.
+	 */
+	private static void processCollections(List<com.tectonica.jonix.onix3.Collection> collections, JSONObject jsonline) {
+		JSONArray jl_collections = new JSONArray();
+
+		for(com.tectonica.jonix.onix3.Collection collection : collections) {
+			JSONObject jl_collection = new JSONObject();
+
+			if(collection.collectionType().value != null) {
+				jl_collection.put("CollectionType", collection.collectionType().value.description);
+			}
+
+			processCollectionIdentifiers(collection.collectionIdentifiers(), jl_collection);
+			processTitleDetails(collection.titleDetails(), jl_collection);
+
+			jl_collections.put(jl_collection);
+		}
+
+		jsonline.put("Collections", jl_collections);
+	}
+
+	/**
+	 * Process CollectionIdentifier information.
+	 * @param col_id   List of CollectionIdentifier records.
+	 * @param jsonline JSON object to write to.
+	 */
+	private static void processCollectionIdentifiers(ListOfOnixDataCompositeWithKey<CollectionIdentifier,JonixCollectionIdentifier,SeriesIdentifierTypes> col_ids, JSONObject jsonline) {
+		JSONArray jl_col_ids = new JSONArray();
+
+		for(CollectionIdentifier col_id : col_ids) {
+			JSONObject jl_col_id = new JSONObject();
+
+			jl_col_id.put("CollectionIdType", col_id.collectionIDType().value);
+			jl_col_id.put("IDTypeName", col_id.idTypeName().value);
+			jl_col_id.put("IDValue", col_id.idValue().value);
+
+			jl_col_ids.put(jl_col_id);
+		}
+
+		jsonline.put("CollectionIdentifers", jl_col_ids);
 	}
 
 	/**

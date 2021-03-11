@@ -66,6 +66,39 @@ public class AppTest
         assert(object.getString("CountryOfManufacture").equals("NZ"));
         assert(object.getString("GTIN_13").equals("9780000000000"));
         assert(object.getString("ISBN13").equals("9780000000000"));
+        assert(object.getLong("EditionNumber")==1);
+
+        JSONArray collections = object.getJSONArray("Collections");
+        Object collection1 = collections.get(0);
+        JSONObject collection1o = (JSONObject)collection1;
+        assert(collection1o.getString("CollectionType").equals("Publisher collection"));
+        JSONArray collection1titles = collection1o.getJSONArray("TitleDetails");
+        Object collection1title1 = collection1titles.get(0);
+        JSONObject collection1title1o = (JSONObject)collection1title1;
+        assert(collection1title1o.getString("TitleType").equals("Distinctive title (book); Cover title (serial); Title on item (serial content item or reviewed resource)"));
+
+        JSONArray collection1tel1 = collection1title1o.getJSONArray("TitleElements");
+        Object collection1tel1o1 = collection1tel1.get(0);
+        JSONObject collection1tel1o1o = (JSONObject)collection1tel1o1;
+        assert(collection1tel1o1o.getString("TitleText").equals("Some series"));
+        assert(collection1tel1o1o.getString("TitleElementLevel").equals("Collection level"));
+
+        JSONArray relatedworks = object.getJSONArray("RelatedWorks");
+        Object relatedwork1 = relatedworks.get(0);
+        JSONObject relatedwork1o = (JSONObject)relatedwork1;
+        assert(relatedwork1o.getString("WorkRelationCode").equals("Manifestation of"));
+
+        JSONArray workidentifiers = relatedwork1o.getJSONArray("WorkIdentifiers");
+        Object workidentifier1 = workidentifiers.get(0);
+        JSONObject workidentifier1o = (JSONObject) workidentifier1;
+        assert(workidentifier1o.getString("IDTypeName").equals("some proprietary id"));
+        assert(workidentifier1o.getString("IDValue").equals("0000000000"));
+        assert(workidentifier1o.getString("WorkIDType").equals("Proprietary"));
+
+        Object workidentifier2 = workidentifiers.get(1);
+        JSONObject workidentifier2o = (JSONObject) workidentifier2;
+        assert(workidentifier2o.getString("IDValue").equals("somedoi"));
+        assert(workidentifier2o.getString("WorkIDType").equals("DOI"));
 
         JSONArray languages = object.getJSONArray("Languages");
         Object lang1 = languages.get(0);
