@@ -99,6 +99,7 @@ public class OnixParser {
 			// JSON serialisation
 			processRecords(records, output_directory);
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -683,7 +684,10 @@ public class OnixParser {
 		for (TitleDetail detail : details) {
 			JSONObject jl_detail = new JSONObject();
 
-			jl_detail.put("TitleType", detail.titleType().value.description);
+			if(detail.titleType().value != null) {
+				jl_detail.put("TitleType", detail.titleType().value.description);
+			}
+
 			jl_detail.put("TitleStatement", detail.titleStatement().value);
 			processTitleElements(detail.titleElements(), jl_detail);
 
@@ -761,8 +765,14 @@ public class OnixParser {
 			return;
 		}
 
-		jl_pnum.put("Language", pnum.language.description);
-		jl_pnum.put("TextScript", pnum.textscript.description);
+		if(pnum.language != null) {
+			jl_pnum.put("Language", pnum.language.description);
+		}
+
+		if(pnum.textscript != null) {
+			jl_pnum.put("TextScript", pnum.textscript.description);
+		}
+
 		jl_pnum.put("Value", pnum.value);
 
 		jsonline.put("PartNumber", jl_pnum);
