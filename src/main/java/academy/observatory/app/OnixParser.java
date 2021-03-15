@@ -57,25 +57,27 @@ public class OnixParser {
 	 * 
 	 * @param args Command line arguments (required). args[0] is a directory
 	 *             containing ONIX XML files to process. args[1] is the output
-	 *             directory.
+	 *             directory. arg[2] is the data source name (no spaces) to use as part of an internal id.
 	 */
 	public static void main(String[] args) {
-		if (args.length < 2) {
+		if (args.length < 3) {
 			throw new RuntimeException(
-					"Requires the directory containing ONIX xml files as the first argument, and the output directory as the second argument.");
+					"Requires the directory containing ONIX xml files as the first argument, the output directory as the second argument, and a data source name as the third argument.");
 		}
 
 		File input_directory = new File(args[0]);
 		String output_directory = args[1];
-		parseOnix(input_directory, output_directory);
+		String data_src = args[2];
+		parseOnix(input_directory, output_directory, data_src);
 	}
 
 	/**
 	 * Parse ONIX records. Write out records to full/update/delete json files.
 	 * @param input_directory File object for input directory.
 	 * @param output_directory String object for output directory.
+	 * @param data_src Data source name.
 	 */
-	public static void parseOnix(File input_directory, String output_directory) {
+	public static void parseOnix(File input_directory, String output_directory, String data_src) {
 		create_directory_if_missing(output_directory);
 
 		try {
@@ -97,7 +99,7 @@ public class OnixParser {
 			// records.streamUnified().collect(toDelimitedFile(targetFile,',',BaseTabulation.ALL));
 
 			// JSON serialisation
-			processRecords(records, output_directory);
+			processRecords(records, output_directory, data_src);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -119,8 +121,9 @@ public class OnixParser {
 	 * 
 	 * @param records    List of Jonix records.
 	 * @param output_dir Output directory.
+	 * @param data_src Data source name.
 	 */
-	private static void processRecords(JonixRecords records, String output_dir) {
+	private static void processRecords(JonixRecords records, String output_dir, String data_src) {
 		List<JSONObject> full_list = new ArrayList<JSONObject>();
 		List<JSONObject> update_list = new ArrayList<JSONObject>();
 		List<JSONObject> delete_list = new ArrayList<JSONObject>();
@@ -129,7 +132,7 @@ public class OnixParser {
 		for (JonixRecord record : records) {
 			if (record.product instanceof com.tectonica.jonix.onix3.Product) {
 				com.tectonica.jonix.onix3.Product product = (com.tectonica.jonix.onix3.Product) record.product;
-				JSONObject jsonline = processProduct(product);
+				JSONObject jsonline = processProduct(product, data_src);
 
 				String notification_code = product.notificationType().value.code;
 				if (NotificationOrUpdateTypes.Notification_confirmed_on_publication.getCode() == notification_code
@@ -181,8 +184,9 @@ public class OnixParser {
 	 * 
 	 * @param product Product record.
 	 * @return Product record as a JSON object.
+	 * @param data_src Data source name.
 	 */
-	private static JSONObject processProduct(com.tectonica.jonix.onix3.Product product) {
+	private static JSONObject processProduct(com.tectonica.jonix.onix3.Product product, String data_src) {
 		JSONObject jsonline = new JSONObject();
 
 		if (product.recordSourceName().exists())
@@ -198,7 +202,9 @@ public class OnixParser {
 		processDescriptiveDetail(product.descriptiveDetail(), jsonline);
 		processRelatedMaterial(product.relatedMaterial(), jsonline);
 		processPublishingDetail(product.publishingDetail(), jsonline);
-		// process
+
+		// Add COKI internal identifier
+		jsonline.put("COKI_ID", data_src + "_" + product.recordReference().value);
 
 		return jsonline;
 	}

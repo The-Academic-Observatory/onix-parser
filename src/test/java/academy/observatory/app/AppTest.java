@@ -38,7 +38,7 @@ public class AppTest
         String input_dir = pwd + "/test_data";
 
         OnixParser parser = new OnixParser();
-        parser.parseOnix(new File(input_dir), OUTPUT_DIR);
+        parser.parseOnix(new File(input_dir), OUTPUT_DIR, "test_src");
 
         assertTrue( true );
     }
@@ -62,7 +62,12 @@ public class AppTest
         assert(object.getString("RecordSourceName").equals("Academic Observatory"));
 
         assert(object.getString("RecordSourceType").equals("Bibliographic agency"));
-        assert(object.getString("RecordRef").equals("some.test.data"));
+
+        String rref = object.getString("RecordRef");
+        assert(rref.equals("some.test.data"));
+
+        assert(object.getString("COKI_ID").equals("test_src_some.test.data"));
+
         assert(object.getString("CountryOfManufacture").equals("NZ"));
         assert(object.getString("GTIN_13").equals("9780000000000"));
         assert(object.getString("ISBN13").equals("9780000000000"));
