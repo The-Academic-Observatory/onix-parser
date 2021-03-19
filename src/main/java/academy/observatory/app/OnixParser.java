@@ -407,7 +407,11 @@ public class OnixParser {
 			JSONObject jl_publisher = new JSONObject();
 
 			jl_publisher.put("PublisherName", publisher.publisherName().value);
-			jl_publisher.put("PublishingRole", publisher.publishingRole().value.description);
+
+			if(publisher.publishingRole().value != null) {
+				jl_publisher.put("PublishingRole", publisher.publishingRole().value.description);
+			}
+
 			processWebsites(publisher.websites(), jl_publisher);
 			// identifiers
 			// websites
@@ -609,7 +613,9 @@ public class OnixParser {
 		JSONArray jl_etypes = new JSONArray();
 
 		for (EditionType etype : etypes) {
-			jl_etypes.put(etype.value.description);
+			if(etype.value != null) {
+				jl_etypes.put(etype.value.description);
+			}
 		}
 
 		jsonline.put("EditionType", jl_etypes);
@@ -628,8 +634,14 @@ public class OnixParser {
 		for (Extent extent : extents) {
 			JSONObject jl_extent = new JSONObject();
 
-			jl_extent.put("ExtentType", extent.extentType().value.description);
-			jl_extent.put("ExtentUnit", extent.extentUnit().value.description);
+			if(extent.extentType().value != null) {
+				jl_extent.put("ExtentType", extent.extentType().value.description);
+			}
+
+			if(extent.extentUnit().value != null) {
+				jl_extent.put("ExtentUnit", extent.extentUnit().value.description);
+			}
+
 			jl_extent.put("ExtentValue", extent.extentValue().value);
 			jl_extent.put("ExtentValueRoman", extent.extentValueRoman().value);
 
@@ -717,7 +729,11 @@ public class OnixParser {
 			JSONObject jl_element = new JSONObject();
 
 			jl_element.put("SequenceNumber", element.sequenceNumber().value);
-			jl_element.put("TitleElementLevel", element.titleElementLevel().value.description);
+
+			if(element.titleElementLevel().value != null) {
+				jl_element.put("TitleElementLevel", element.titleElementLevel().value.description);
+			}
+
 			jl_element.put("YearOfAnnual", element.yearOfAnnual().value);
 
 			processPartNumber(element.partNumber(), jl_element);
@@ -1106,9 +1122,15 @@ public class OnixParser {
 		for (ContributorDate date : dates) {
 			JSONObject jl_date = new JSONObject();
 
-			jl_date.put("Role", date.contributorDateRole().value.description);
+			if(date.contributorDateRole().value != null) {
+				jl_date.put("Role", date.contributorDateRole().value.description);
+			}
+
 			jl_date.put("Date", date.date().value);
-			jl_date.put("Format", date.dateFormat().value.description);
+
+			if(date.dateFormat().value != null) {
+				jl_date.put("Format", date.dateFormat().value.description);
+			}
 
 			jl_dates.put(jl_date);
 		}
@@ -1130,9 +1152,17 @@ public class OnixParser {
 			JSONObject jl_place = new JSONObject();
 			JSONArray location_names = new JSONArray();
 
-			jl_place.put("Relation", place.contributorPlaceRelator().value.description);
-			jl_place.put("CountryCode", place.countryCode().value.description);
-			jl_place.put("RegionCode", place.regionCode().value.description);
+			if(place.contributorPlaceRelator().value != null) {
+				jl_place.put("Relation", place.contributorPlaceRelator().value.description);
+			}
+
+			if(place.countryCode().value != null) {
+				jl_place.put("CountryCode", place.countryCode().value.description);
+			}
+
+			if(place.regionCode().value != null) {
+				jl_place.put("RegionCode", place.regionCode().value.description);
+			}
 
 			for (LocationName location : place.locationNames()) {
 				location_names.put(location.value);
@@ -1156,7 +1186,9 @@ public class OnixParser {
 		JSONArray str_roles = new JSONArray();
 
 		for (ContributorRole role : roles) {
-			str_roles.put(role.value.description);
+			if(role.value != null) {
+				str_roles.put(role.value.description);
+			}
 		}
 
 		jsonline.put("Roles", str_roles);
