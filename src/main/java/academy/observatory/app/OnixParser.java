@@ -500,7 +500,6 @@ public class OnixParser {
 			JSONObject jsonline) {
 		jsonline.put("ISBN13", pids.find(ProductIdentifierTypes.ISBN_13).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("ISBN10", pids.find(ProductIdentifierTypes.ISBN_10).map(pid -> pid.idValue().value).orElse(null));
-		jsonline.put("DOI", pids.find(ProductIdentifierTypes.DOI).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("ARK", pids.find(ProductIdentifierTypes.ARK).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("BNF_Control_number",
 				pids.find(ProductIdentifierTypes.BNF_Control_number).map(pid -> pid.idValue().value).orElse(null));
@@ -527,6 +526,9 @@ public class OnixParser {
 		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC12_5).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC12_5).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("URN", pids.find(ProductIdentifierTypes.URN).map(pid -> pid.idValue().value).orElse(null));
+
+		// We might need to support multiple DOI listings at a later point.  See how single DOI pans out first.
+		jsonline.put("DOI", pids.find(ProductIdentifierTypes.DOI).map(pid -> pid.idValue().value).orElse(null));
 	}
 
 	/**
@@ -556,7 +558,18 @@ public class OnixParser {
 		if(!dd.isNoCollection()) {
 			processCollections(dd.collections(), jsonline);
 		}
+
+		processProductForm(dd.productForm(), jsonline);
 	}
+
+	private static void processProductForm(ProductForm pf, JSONObject jsonline) {
+		if(!pf.exists()) {
+			return;
+		}
+
+		jsonline.put("ProductForm", pf.value.description);
+	}
+
 
 	/**
 	 * Process Collection information.

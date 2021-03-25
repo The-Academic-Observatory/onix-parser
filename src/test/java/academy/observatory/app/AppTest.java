@@ -72,6 +72,7 @@ public class AppTest
         assert(object.getString("GTIN_13").equals("9780000000000"));
         assert(object.getString("ISBN13").equals("9780000000000"));
         assert(object.getLong("EditionNumber")==1);
+        assert(object.getString("ProductForm").equals("Paperback / softback"));
 
         JSONArray collections = object.getJSONArray("Collections");
         Object collection1 = collections.get(0);
