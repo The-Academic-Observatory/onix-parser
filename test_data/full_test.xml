@@ -180,6 +180,16 @@
           <IDValue>somedoi</IDValue>
         </WorkIdentifier>
       </RelatedWork>
+	  <RelatedProduct>
+		<!--Epublication based on-->
+		<ProductRelationCode>13</ProductRelationCode>
+		<ProductIdentifier>
+			<!--ISBN-->
+			<ProductIDType>15</ProductIDType>
+			<IDValue>9780000000000</IDValue>
+		</ProductIdentifier>
+		<ProductForm>BC</ProductForm>
+      </RelatedProduct>
     </RelatedMaterial>
 	</Product>
 </ONIXMessage>

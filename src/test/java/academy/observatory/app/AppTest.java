@@ -89,6 +89,16 @@ public class AppTest
         assert(collection1tel1o1o.getString("TitleText").equals("Some series"));
         assert(collection1tel1o1o.getString("TitleElementLevel").equals("Collection level"));
 
+        JSONArray relatedproducts = object.getJSONArray("RelatedProducts");
+        Object relatedproduct1 = relatedproducts.get(0);
+        JSONObject relatedproduct1o = (JSONObject)relatedproduct1;
+        assert(relatedproduct1o.getString("ProductForm").equals("Paperback / softback"));
+        assert(relatedproduct1o.getString("ISBN13").equals("9780000000000"));
+        JSONArray relatedproductcodes = relatedproduct1o.getJSONArray("ProductRelationCodes");
+        Object relatedproductcode1 = relatedproductcodes.get(0);
+        String relatedproductcode1o = (String)relatedproductcode1;
+        assert(relatedproductcode1o.equals("Epublication based on (print product)"));
+
         JSONArray relatedworks = object.getJSONArray("RelatedWorks");
         Object relatedwork1 = relatedworks.get(0);
         JSONObject relatedwork1o = (JSONObject)relatedwork1;

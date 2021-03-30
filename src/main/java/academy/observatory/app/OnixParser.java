@@ -215,13 +215,51 @@ public class OnixParser {
 	 * @param jsonline    JSON object to write to.
 	 */
 	private static void processRelatedMaterial(RelatedMaterial rel_mat, JSONObject jsonline) {
-		// processRelatedProducts()
+		processRelatedProducts(rel_mat.relatedProducts(), jsonline);
 		processRelatedWorks(rel_mat.relatedWorks(), jsonline);
 	}
 
 	/**
+	 * Process RelatedProducts records.
+	 * @param rel_works  List of RelatedProduct records.
+	 * @param jsonline   JSON object to write to.
+	 */
+	private static void processRelatedProducts(List<RelatedProduct> rel_prods, JSONObject jsonline) {
+		JSONArray jl_rel_products = new JSONArray();
+
+		for(RelatedProduct rel_prod : rel_prods) {
+			JSONObject jl_rel_prod = new JSONObject();
+			processProductForm(rel_prod.productForm(), jl_rel_prod);
+			processProductIdentifiers(rel_prod.productIdentifiers(), jl_rel_prod);
+			// processProductFormDetails()
+			processProductRelationCodes(rel_prod.productRelationCodes(), jl_rel_prod);
+
+			jl_rel_products.put(jl_rel_prod);
+		}
+
+		jsonline.put("RelatedProducts", jl_rel_products);
+	}
+
+	/**
+	 * Process ProductRelationCode records.
+	 * @param prod_relation_codes	List of product relation codes.
+	 * @param jsonline 				JSON object to write to.
+	 */
+	private static void processProductRelationCodes(ListOfOnixElement<ProductRelationCode,ProductRelations> prod_relation_codes, JSONObject jsonline) {
+		JSONArray jl_codes = new JSONArray();
+
+		for(ProductRelationCode code : prod_relation_codes) {
+			if(code.exists()) {
+				jl_codes.put(code.value.description);
+			}
+		}
+
+		jsonline.put("ProductRelationCodes", jl_codes);
+	}
+
+	/**
 	 * Process RelatedWorks records.
-	 * @param rel_works  List of RelatedWork record.
+	 * @param rel_works  List of RelatedWork records.
 	 * @param jsonline   JSON object to write to.
 	 */
 	private static void processRelatedWorks(List<RelatedWork> rel_works,  JSONObject jsonline) {
