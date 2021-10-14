@@ -6,7 +6,7 @@
 
     <groupId>academy.observatory.app</groupId>
     <artifactId>coki-onix-parser</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.2-SNAPSHOT</version>
 
     <name>coki-onix-parser</name>
     <url>https://github.com/The-Academic-Observatory/onix-parser</url>
