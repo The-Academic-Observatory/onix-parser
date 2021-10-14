@@ -81,7 +81,9 @@ public class OnixParser {
 		create_directory_if_missing(output_directory);
 
 		try {
-			JonixRecords records = Jonix.source(input_directory, "*.xml", false).onSourceStart(src -> {
+			JonixRecords records = Jonix.source(input_directory, "*.xml", false)
+                                        .source(input_directory, "*.onx", false)
+                                        .onSourceStart(src -> {
 				System.out.println("Processing " + src.onixVersion() + " file: " + src.sourceName());
 
 				// We're only going to process ONIX3. If ONIX2 is required later, use
