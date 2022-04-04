@@ -1,0 +1,40 @@
+{
+  "title": "ONIX Parser",
+  "description": "<p>ONIX Parser transforms ONIX files into JSON Lines format that can be read by BigQuery. Built with Java and <a href=\"https://github.com/zach-m/jonix\">JONIX</a>.</p>\n\n<p><strong>Contributors</strong>&nbsp;<br>\nConceptualization: Richard Hosking, James P. Diprose, Lucy Montgomery, Cameron Neylon, and Tuan-Yow Chien.<br>\nData curation: James P. Diprose and Tuan-Yow Chien.<br>\nFormal analysis: Richard Hosking and James P. Diprose.<br>\nFunding acquisition: Lucy Montgomery and Cameron Neylon.<br>\nInvestigation: Richard Hosking.<br>\nMethodology: Richard Hosking, James P. Diprose, and Cameron Neylon.<br>\nProject administration: Richard Hosking.<br>\nResources: Richard Hosking and James P. Diprose.<br>\nSoftware: Richard Hosking, James P. Diprose, and Tuan-Yow Chien.<br>\nSupervision: Richard Hosking, James P. Diprose, and Cameron Neylon.<br>\nValidation: Richard Hosking, James P. Diprose, Cameron Neylon, and Tuan-Yow Chien.<br>\nWriting - original draft: James P. Diprose and Tuan-Yow Chien.</p>",
+  "notes": "The Curtin Open Knowledge Initiative (COKI) is a strategic initiative of the Research Office at Curtin, the Faculty of Humanities, School of Media, Creative Arts and Social Inquiry and the Curtin Institute for Computation, with additional support from the Andrew W. Mellon Foundation and the Arcadia Fund, a charitable fund of Lisbet Rausing and Peter Baldwin.",
+  "communities": [
+    {
+      "identifier": "coki"
+    }
+  ],
+  "license": {
+    "id": "Apache-2.0"
+  },
+  "creators": [
+    {
+      "orcid": "0000-0002-6237-7423",
+      "affiliation": "Centre for Culture and Technology, Curtin University",
+      "name": "Tuan-Yow Chien"
+    },
+    {
+      "orcid": "0000-0002-5094-3571",
+      "affiliation": "Centre for Culture and Technology, Curtin University",
+      "name": "James P. Diprose"
+    },
+    {
+      "orcid": "0000-0001-8288-5241",
+      "affiliation": "Centre for Culture and Technology, Curtin University",
+      "name": "Richard Hosking"
+    },
+    {
+      "orcid": "0000-0001-6551-8140",
+      "affiliation": "Centre for Culture and Technology, Curtin University",
+      "name": "Lucy Montgomery"
+    },
+    {
+      "orcid": "0000-0002-0068-716X",
+      "affiliation": "Centre for Culture and Technology, Curtin University",
+      "name": "Cameron Neylon"
+    }
+  ]
+}
