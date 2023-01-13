@@ -38,7 +38,7 @@ public class AppTest
         String input_dir = pwd + "/test_data";
 
         OnixParser parser = new OnixParser();
-        parser.parseOnix(new File(input_dir), OUTPUT_DIR, "test_src");
+        parser.parseOnix(new File(input_dir), OUTPUT_DIR);
 
         assertTrue( true );
     }
@@ -65,8 +65,6 @@ public class AppTest
 
         String rref = object.getString("RecordRef");
         assert(rref.equals("some.test.data"));
-
-        assert(object.getString("COKI_ID").equals("test_src_some.test.data"));
 
         assert(object.getString("CountryOfManufacture").equals("NZ"));
         assert(object.getString("GTIN_13").equals("9780000000000"));

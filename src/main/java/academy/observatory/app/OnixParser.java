@@ -57,43 +57,42 @@ public class OnixParser {
 	 * 
 	 * @param args Command line arguments (required). args[0] is a directory
 	 *             containing ONIX XML files to process. args[1] is the output
-	 *             directory. arg[2] is the data source name (no spaces) to use as part of an internal id.
+	 *             directory.
 	 */
 	public static void main(String[] args) {
-		if (args.length < 3) {
+		if (args.length < 2) {
 			throw new RuntimeException(
-					"Requires the directory containing ONIX xml files as the first argument, the output directory as the second argument, and a data source name as the third argument.");
+					"Requires the directory containing ONIX xml files as the first argument and the output directory as the second argument");
 		}
 
 		File input_directory = new File(args[0]);
 		String output_directory = args[1];
-		String data_src = args[2];
-		parseOnix(input_directory, output_directory, data_src);
+		parseOnix(input_directory, output_directory);
 	}
 
 	/**
 	 * Parse ONIX records. Write out records to full/update/delete json files.
-	 * @param input_directory File object for input directory.
+	 * 
+	 * @param input_directory  File object for input directory.
 	 * @param output_directory String object for output directory.
-	 * @param data_src Data source name.
 	 */
-	public static void parseOnix(File input_directory, String output_directory, String data_src) {
+	public static void parseOnix(File input_directory, String output_directory) {
 		create_directory_if_missing(output_directory);
 
 		try {
 			JonixRecords records = Jonix.source(input_directory, "*.xml", false)
-                                        .source(input_directory, "*.onx", false)
-                                        .onSourceStart(src -> {
-				System.out.println("Processing " + src.onixVersion() + " file: " + src.sourceName());
+					.source(input_directory, "*.onx", false)
+					.onSourceStart(src -> {
+						System.out.println("Processing " + src.onixVersion() + " file: " + src.sourceName());
 
-				// We're only going to process ONIX3. If ONIX2 is required later, use
-				// JonixUnifier or process it separately.
-				if (src.onixVersion() != OnixVersion.ONIX3) {
-					throw new RuntimeException("ONIX2 message received. We are only processing ONIX3");
-				}
-			}).onSourceEnd(src -> {
-				System.out.println("Processed records: " + src.productsProcessedCount());
-			}).configure("jonix.stream.failOnInvalidFile", Boolean.FALSE);
+						// We're only going to process ONIX3. If ONIX2 is required later, use
+						// JonixUnifier or process it separately.
+						if (src.onixVersion() != OnixVersion.ONIX3) {
+							throw new RuntimeException("ONIX2 message received. We are only processing ONIX3");
+						}
+					}).onSourceEnd(src -> {
+						System.out.println("Processed records: " + src.productsProcessedCount());
+					}).configure("jonix.stream.failOnInvalidFile", Boolean.FALSE);
 
 			// CSV serialisation
 			// File targetFile = new File("/tmp/test.csv");
@@ -101,7 +100,7 @@ public class OnixParser {
 			// records.streamUnified().collect(toDelimitedFile(targetFile,',',BaseTabulation.ALL));
 
 			// JSON serialisation
-			processRecords(records, output_directory, data_src);
+			processRecords(records, output_directory);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -109,11 +108,12 @@ public class OnixParser {
 
 	/**
 	 * Create directory if missing.
+	 * 
 	 * @param dir_path Directory path
 	 */
 	private static void create_directory_if_missing(String dir_path) {
 		File directory = new File(dir_path);
-		if(!directory.exists()) {
+		if (!directory.exists()) {
 			directory.mkdirs();
 		}
 	}
@@ -123,9 +123,8 @@ public class OnixParser {
 	 * 
 	 * @param records    List of Jonix records.
 	 * @param output_dir Output directory.
-	 * @param data_src Data source name.
 	 */
-	private static void processRecords(JonixRecords records, String output_dir, String data_src) {
+	private static void processRecords(JonixRecords records, String output_dir) {
 		List<JSONObject> full_list = new ArrayList<JSONObject>();
 		List<JSONObject> update_list = new ArrayList<JSONObject>();
 		List<JSONObject> delete_list = new ArrayList<JSONObject>();
@@ -134,7 +133,7 @@ public class OnixParser {
 		for (JonixRecord record : records) {
 			if (record.product instanceof com.tectonica.jonix.onix3.Product) {
 				com.tectonica.jonix.onix3.Product product = (com.tectonica.jonix.onix3.Product) record.product;
-				JSONObject jsonline = processProduct(product, data_src);
+				JSONObject jsonline = processProduct(product);
 
 				String notification_code = product.notificationType().value.code;
 				if (NotificationOrUpdateTypes.Notification_confirmed_on_publication.getCode() == notification_code
@@ -186,9 +185,8 @@ public class OnixParser {
 	 * 
 	 * @param product Product record.
 	 * @return Product record as a JSON object.
-	 * @param data_src Data source name.
 	 */
-	private static JSONObject processProduct(com.tectonica.jonix.onix3.Product product, String data_src) {
+	private static JSONObject processProduct(com.tectonica.jonix.onix3.Product product) {
 		JSONObject jsonline = new JSONObject();
 
 		if (product.recordSourceName().exists())
@@ -205,16 +203,14 @@ public class OnixParser {
 		processRelatedMaterial(product.relatedMaterial(), jsonline);
 		processPublishingDetail(product.publishingDetail(), jsonline);
 
-		// Add COKI internal identifier
-		jsonline.put("COKI_ID", data_src + "_" + product.recordReference().value);
-
 		return jsonline;
 	}
 
 	/**
 	 * Process RelatedMaterial records.
-	 * @param rel_mat     Related material object.
-	 * @param jsonline    JSON object to write to.
+	 * 
+	 * @param rel_mat  Related material object.
+	 * @param jsonline JSON object to write to.
 	 */
 	private static void processRelatedMaterial(RelatedMaterial rel_mat, JSONObject jsonline) {
 		processRelatedProducts(rel_mat.relatedProducts(), jsonline);
@@ -223,13 +219,14 @@ public class OnixParser {
 
 	/**
 	 * Process RelatedProducts records.
-	 * @param rel_works  List of RelatedProduct records.
-	 * @param jsonline   JSON object to write to.
+	 * 
+	 * @param rel_works List of RelatedProduct records.
+	 * @param jsonline  JSON object to write to.
 	 */
 	private static void processRelatedProducts(List<RelatedProduct> rel_prods, JSONObject jsonline) {
 		JSONArray jl_rel_products = new JSONArray();
 
-		for(RelatedProduct rel_prod : rel_prods) {
+		for (RelatedProduct rel_prod : rel_prods) {
 			JSONObject jl_rel_prod = new JSONObject();
 			processProductForm(rel_prod.productForm(), jl_rel_prod);
 			processProductIdentifiers(rel_prod.productIdentifiers(), jl_rel_prod);
@@ -244,14 +241,16 @@ public class OnixParser {
 
 	/**
 	 * Process ProductRelationCode records.
-	 * @param prod_relation_codes	List of product relation codes.
-	 * @param jsonline 				JSON object to write to.
+	 * 
+	 * @param prod_relation_codes List of product relation codes.
+	 * @param jsonline            JSON object to write to.
 	 */
-	private static void processProductRelationCodes(ListOfOnixElement<ProductRelationCode,ProductRelations> prod_relation_codes, JSONObject jsonline) {
+	private static void processProductRelationCodes(
+			ListOfOnixElement<ProductRelationCode, ProductRelations> prod_relation_codes, JSONObject jsonline) {
 		JSONArray jl_codes = new JSONArray();
 
-		for(ProductRelationCode code : prod_relation_codes) {
-			if(code.exists()) {
+		for (ProductRelationCode code : prod_relation_codes) {
+			if (code.exists()) {
 				jl_codes.put(code.value.description);
 			}
 		}
@@ -261,16 +260,17 @@ public class OnixParser {
 
 	/**
 	 * Process RelatedWorks records.
-	 * @param rel_works  List of RelatedWork records.
-	 * @param jsonline   JSON object to write to.
+	 * 
+	 * @param rel_works List of RelatedWork records.
+	 * @param jsonline  JSON object to write to.
 	 */
-	private static void processRelatedWorks(List<RelatedWork> rel_works,  JSONObject jsonline) {
+	private static void processRelatedWorks(List<RelatedWork> rel_works, JSONObject jsonline) {
 		JSONArray jl_rel_works = new JSONArray();
 
-		for(RelatedWork rel_work : rel_works) {
+		for (RelatedWork rel_work : rel_works) {
 			JSONObject jl_rel_work = new JSONObject();
 
-			if(rel_work.workRelationCode().value != null) {
+			if (rel_work.workRelationCode().value != null) {
 				jl_rel_work.put("WorkRelationCode", rel_work.workRelationCode().value.description);
 			}
 
@@ -284,19 +284,22 @@ public class OnixParser {
 
 	/**
 	 * Process WorkIdentifier records.
-	 * @param work_ids  List of WorkIdentifier records.
-	 * @param jsonline  JSON object to write to.
+	 * 
+	 * @param work_ids List of WorkIdentifier records.
+	 * @param jsonline JSON object to write to.
 	 */
-	private static void processWorkIdentifiers(ListOfOnixDataCompositeWithKey<WorkIdentifier,JonixWorkIdentifier,WorkIdentifierTypes> work_ids, JSONObject jsonline) {
+	private static void processWorkIdentifiers(
+			ListOfOnixDataCompositeWithKey<WorkIdentifier, JonixWorkIdentifier, WorkIdentifierTypes> work_ids,
+			JSONObject jsonline) {
 		JSONArray jl_work_ids = new JSONArray();
 
-		for(WorkIdentifier work_id : work_ids) {
+		for (WorkIdentifier work_id : work_ids) {
 			JSONObject jl_work_id = new JSONObject();
 
 			jl_work_id.put("IDTypeName", work_id.idTypeName().value);
 			jl_work_id.put("IDValue", work_id.idValue().value);
 
-			if(work_id.workIDType().value != null) {
+			if (work_id.workIDType().value != null) {
 				jl_work_id.put("WorkIDType", work_id.workIDType().value.description);
 			}
 
@@ -339,7 +342,7 @@ public class OnixParser {
 	private static void processImprints(List<Imprint> imprints, JSONObject jsonline) {
 		JSONArray jl_imprints = new JSONArray();
 
-		for(Imprint imprint : imprints) {
+		for (Imprint imprint : imprints) {
 			JSONObject jl_imprint = new JSONObject();
 			processImprintName(imprint.imprintName(), jl_imprint);
 			processImprintIdentifiers(imprint.imprintIdentifiers(), jl_imprint);
@@ -358,7 +361,7 @@ public class OnixParser {
 	private static void processImprintName(ImprintName iname, JSONObject jsonline) {
 		jsonline.put("ImprintName", iname.value);
 
-		if(iname.language != null) {
+		if (iname.language != null) {
 			jsonline.put("ImprintName_lang", iname.language.description);
 		}
 	}
@@ -369,11 +372,13 @@ public class OnixParser {
 	 * @param iids     List of ImprintIdentifier objects.
 	 * @param jsonline JSON object to write to.
 	 */
-	private static void processImprintIdentifiers(ListOfOnixDataCompositeWithKey<ImprintIdentifier,JonixImprintIdentifier,NameIdentifierTypes> iids, JSONObject jsonline) {
+	private static void processImprintIdentifiers(
+			ListOfOnixDataCompositeWithKey<ImprintIdentifier, JonixImprintIdentifier, NameIdentifierTypes> iids,
+			JSONObject jsonline) {
 		JSONArray jl_iids = new JSONArray();
 
-		for(ImprintIdentifier iid : iids) {
-			if(!iid.exists()) {
+		for (ImprintIdentifier iid : iids) {
+			if (!iid.exists()) {
 				continue;
 			}
 
@@ -391,13 +396,15 @@ public class OnixParser {
 
 	/**
 	 * Process city of publications.
-	 * @param cpubs List of city of publications
+	 * 
+	 * @param cpubs    List of city of publications
 	 * @param jsonline JSON object to write to.
 	 */
-	private static void processCityofPublications(ListOfOnixElement<CityOfPublication,String> cpubs, JSONObject jsonline) {
+	private static void processCityofPublications(ListOfOnixElement<CityOfPublication, String> cpubs,
+			JSONObject jsonline) {
 		JSONArray jl_cpubs = new JSONArray();
 
-		for(CityOfPublication cpub : cpubs) {
+		for (CityOfPublication cpub : cpubs) {
 			jl_cpubs.put(cpub.value);
 		}
 
@@ -448,7 +455,7 @@ public class OnixParser {
 
 			jl_publisher.put("PublisherName", publisher.publisherName().value);
 
-			if(publisher.publishingRole().value != null) {
+			if (publisher.publishingRole().value != null) {
 				jl_publisher.put("PublishingRole", publisher.publishingRole().value.description);
 			}
 
@@ -567,7 +574,8 @@ public class OnixParser {
 		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC12_5).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("URN", pids.find(ProductIdentifierTypes.URN).map(pid -> pid.idValue().value).orElse(null));
 
-		// We might need to support multiple DOI listings at a later point.  See how single DOI pans out first.
+		// We might need to support multiple DOI listings at a later point. See how
+		// single DOI pans out first.
 		jsonline.put("DOI", pids.find(ProductIdentifierTypes.DOI).map(pid -> pid.idValue().value).orElse(null));
 	}
 
@@ -594,8 +602,8 @@ public class OnixParser {
 		processLanguages(dd.languages(), jsonline);
 		processEditionTypes(dd.editionTypes(), jsonline);
 		processExtents(dd.extents(), jsonline);
-		
-		if(!dd.isNoCollection()) {
+
+		if (!dd.isNoCollection()) {
 			processCollections(dd.collections(), jsonline);
 		}
 
@@ -603,26 +611,27 @@ public class OnixParser {
 	}
 
 	private static void processProductForm(ProductForm pf, JSONObject jsonline) {
-		if(!pf.exists()) {
+		if (!pf.exists()) {
 			return;
 		}
 
 		jsonline.put("ProductForm", pf.value.description);
 	}
 
-
 	/**
 	 * Process Collection information.
+	 * 
 	 * @param collections List of collection records.
 	 * @param jsonline    JSON object to write to.
 	 */
-	private static void processCollections(List<com.tectonica.jonix.onix3.Collection> collections, JSONObject jsonline) {
+	private static void processCollections(List<com.tectonica.jonix.onix3.Collection> collections,
+			JSONObject jsonline) {
 		JSONArray jl_collections = new JSONArray();
 
-		for(com.tectonica.jonix.onix3.Collection collection : collections) {
+		for (com.tectonica.jonix.onix3.Collection collection : collections) {
 			JSONObject jl_collection = new JSONObject();
 
-			if(collection.collectionType().value != null) {
+			if (collection.collectionType().value != null) {
 				jl_collection.put("CollectionType", collection.collectionType().value.description);
 			}
 
@@ -637,13 +646,16 @@ public class OnixParser {
 
 	/**
 	 * Process CollectionIdentifier information.
+	 * 
 	 * @param col_id   List of CollectionIdentifier records.
 	 * @param jsonline JSON object to write to.
 	 */
-	private static void processCollectionIdentifiers(ListOfOnixDataCompositeWithKey<CollectionIdentifier,JonixCollectionIdentifier,SeriesIdentifierTypes> col_ids, JSONObject jsonline) {
+	private static void processCollectionIdentifiers(
+			ListOfOnixDataCompositeWithKey<CollectionIdentifier, JonixCollectionIdentifier, SeriesIdentifierTypes> col_ids,
+			JSONObject jsonline) {
 		JSONArray jl_col_ids = new JSONArray();
 
-		for(CollectionIdentifier col_id : col_ids) {
+		for (CollectionIdentifier col_id : col_ids) {
 			JSONObject jl_col_id = new JSONObject();
 
 			jl_col_id.put("CollectionIdType", col_id.collectionIDType().value);
@@ -666,7 +678,7 @@ public class OnixParser {
 		JSONArray jl_etypes = new JSONArray();
 
 		for (EditionType etype : etypes) {
-			if(etype.value != null) {
+			if (etype.value != null) {
 				jl_etypes.put(etype.value.description);
 			}
 		}
@@ -687,11 +699,11 @@ public class OnixParser {
 		for (Extent extent : extents) {
 			JSONObject jl_extent = new JSONObject();
 
-			if(extent.extentType().value != null) {
+			if (extent.extentType().value != null) {
 				jl_extent.put("ExtentType", extent.extentType().value.description);
 			}
 
-			if(extent.extentUnit().value != null) {
+			if (extent.extentUnit().value != null) {
 				jl_extent.put("ExtentUnit", extent.extentUnit().value.description);
 			}
 
@@ -755,7 +767,7 @@ public class OnixParser {
 		for (TitleDetail detail : details) {
 			JSONObject jl_detail = new JSONObject();
 
-			if(detail.titleType().value != null) {
+			if (detail.titleType().value != null) {
 				jl_detail.put("TitleType", detail.titleType().value.description);
 			}
 
@@ -783,7 +795,7 @@ public class OnixParser {
 
 			jl_element.put("SequenceNumber", element.sequenceNumber().value);
 
-			if(element.titleElementLevel().value != null) {
+			if (element.titleElementLevel().value != null) {
 				jl_element.put("TitleElementLevel", element.titleElementLevel().value.description);
 			}
 
@@ -840,11 +852,11 @@ public class OnixParser {
 			return;
 		}
 
-		if(pnum.language != null) {
+		if (pnum.language != null) {
 			jl_pnum.put("Language", pnum.language.description);
 		}
 
-		if(pnum.textscript != null) {
+		if (pnum.textscript != null) {
 			jl_pnum.put("TextScript", pnum.textscript.description);
 		}
 
@@ -1175,13 +1187,13 @@ public class OnixParser {
 		for (ContributorDate date : dates) {
 			JSONObject jl_date = new JSONObject();
 
-			if(date.contributorDateRole().value != null) {
+			if (date.contributorDateRole().value != null) {
 				jl_date.put("Role", date.contributorDateRole().value.description);
 			}
 
 			jl_date.put("Date", date.date().value);
 
-			if(date.dateFormat().value != null) {
+			if (date.dateFormat().value != null) {
 				jl_date.put("Format", date.dateFormat().value.description);
 			}
 
@@ -1205,15 +1217,15 @@ public class OnixParser {
 			JSONObject jl_place = new JSONObject();
 			JSONArray location_names = new JSONArray();
 
-			if(place.contributorPlaceRelator().value != null) {
+			if (place.contributorPlaceRelator().value != null) {
 				jl_place.put("Relation", place.contributorPlaceRelator().value.description);
 			}
 
-			if(place.countryCode().value != null) {
+			if (place.countryCode().value != null) {
 				jl_place.put("CountryCode", place.countryCode().value.description);
 			}
 
-			if(place.regionCode().value != null) {
+			if (place.regionCode().value != null) {
 				jl_place.put("RegionCode", place.regionCode().value.description);
 			}
 
@@ -1239,7 +1251,7 @@ public class OnixParser {
 		JSONArray str_roles = new JSONArray();
 
 		for (ContributorRole role : roles) {
-			if(role.value != null) {
+			if (role.value != null) {
 				str_roles.put(role.value.description);
 			}
 		}
