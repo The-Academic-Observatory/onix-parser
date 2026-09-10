@@ -91,8 +91,8 @@ public class OnixParser {
 							throw new RuntimeException("ONIX2 message received. We are only processing ONIX3");
 						}
 					}).onSourceEnd(src -> {
-						System.out.println("Processed records: " + src.productsProcessedCount());
-					}).configure("jonix.stream.failOnInvalidFile", Boolean.FALSE);
+						System.out.println("Processed records: " + src.productCount());
+					}).failOnInvalidFile(false);
 
 			// CSV serialisation
 			// File targetFile = new File("/tmp/test.csv");
@@ -551,7 +551,7 @@ public class OnixParser {
 		jsonline.put("BNF_Control_number",
 				pids.find(ProductIdentifierTypes.BNF_Control_number).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("Co_publisher_s_ISBN_13",
-				pids.find(ProductIdentifierTypes.Co_publisher_s_ISBN_13).map(pid -> pid.idValue().value).orElse(null));
+				pids.find(ProductIdentifierTypes.Co_publishers_ISBN_13).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("GTIN_13", pids.find(ProductIdentifierTypes.GTIN_13).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("GTIN_14", pids.find(ProductIdentifierTypes.GTIN_14).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("ISBN_A", pids.find(ProductIdentifierTypes.ISBN_A).map(pid -> pid.idValue().value).orElse(null));
@@ -568,10 +568,10 @@ public class OnixParser {
 		jsonline.put("OLCC_number",
 				pids.find(ProductIdentifierTypes.OLCC_number).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("PID_Proprietary",
-				pids.find(ProductIdentifierTypes.Proprietary).map(pid -> pid.idValue().value).orElse(null));
+				pids.find(ProductIdentifierTypes.Proprietary_product_ID_scheme).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("UPC", pids.find(ProductIdentifierTypes.UPC).map(pid -> pid.idValue().value).orElse(null));
-		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC12_5).map(pid -> pid.idValue().value).orElse(null));
-		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC12_5).map(pid -> pid.idValue().value).orElse(null));
+		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC_12_5).map(pid -> pid.idValue().value).orElse(null));
+		jsonline.put("UPC12_5", pids.find(ProductIdentifierTypes.UPC_12_5).map(pid -> pid.idValue().value).orElse(null));
 		jsonline.put("URN", pids.find(ProductIdentifierTypes.URN).map(pid -> pid.idValue().value).orElse(null));
 
 		// We might need to support multiple DOI listings at a later point. See how
@@ -651,7 +651,7 @@ public class OnixParser {
 	 * @param jsonline JSON object to write to.
 	 */
 	private static void processCollectionIdentifiers(
-			ListOfOnixDataCompositeWithKey<CollectionIdentifier, JonixCollectionIdentifier, SeriesIdentifierTypes> col_ids,
+			ListOfOnixDataCompositeWithKey<CollectionIdentifier, JonixCollectionIdentifier, CollectionIdentifierTypes> col_ids,
 			JSONObject jsonline) {
 		JSONArray jl_col_ids = new JSONArray();
 
@@ -1302,7 +1302,7 @@ public class OnixParser {
 
 		jl_name_identifiers.put("ARK", nids.find(NameIdentifierTypes.ARK).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("B_rsenverein_Verkehrsnummer", nids
-				.find(NameIdentifierTypes.B_rsenverein_Verkehrsnummer).map(nid -> nid.idValue().value).orElse(null));
+				.find(NameIdentifierTypes.Borsenverein_Verkehrsnummer).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("BNE_CN",
 				nids.find(NameIdentifierTypes.BNE_CN).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("BNF_Control_Number",
@@ -1314,7 +1314,7 @@ public class OnixParser {
 		jl_name_identifiers.put("DUNS",
 				nids.find(NameIdentifierTypes.DUNS).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("EIDR_Party_DOI",
-				nids.find(NameIdentifierTypes.EIDR_Party_DOI).map(nid -> nid.idValue().value).orElse(null));
+				nids.find(NameIdentifierTypes.EIDR_Party_ID).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("Fondscode_Boekenbank",
 				nids.find(NameIdentifierTypes.Fondscode_Boekenbank).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("FundRef_DOI",
@@ -1339,8 +1339,6 @@ public class OnixParser {
 				.find(NameIdentifierTypes.Japanese_Publisher_identifier).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("JP_Distribution_Identifier",
 				nids.find(NameIdentifierTypes.JP_Distribution_Identifier).map(nid -> nid.idValue().value).orElse(null));
-		jl_name_identifiers.put("LCCN",
-				nids.find(NameIdentifierTypes.LCCN).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("MARC_organization_code",
 				nids.find(NameIdentifierTypes.MARC_organization_code).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("Nasjonalt_autoritetsregister", nids
@@ -1349,9 +1347,9 @@ public class OnixParser {
 				nids.find(NameIdentifierTypes.ORCID).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("PND", nids.find(NameIdentifierTypes.PND).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("Proprietary",
-				nids.find(NameIdentifierTypes.Proprietary).map(nid -> nid.idValue().value).orElse(null));
+				nids.find(NameIdentifierTypes.Proprietary_name_ID_scheme).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("Proprietary_",
-				nids.find(NameIdentifierTypes.Proprietary_).map(nid -> nid.idValue().value).orElse(null));
+				nids.find(NameIdentifierTypes.Proprietary).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("Ringgold_ID",
 				nids.find(NameIdentifierTypes.Ringgold_ID).map(nid -> nid.idValue().value).orElse(null));
 		jl_name_identifiers.put("SAN", nids.find(NameIdentifierTypes.SAN).map(nid -> nid.idValue().value).orElse(null));
