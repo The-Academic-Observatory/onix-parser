@@ -79,7 +79,7 @@ public class AppTest
         JSONArray collection1titles = collection1o.getJSONArray("TitleDetails");
         Object collection1title1 = collection1titles.get(0);
         JSONObject collection1title1o = (JSONObject)collection1title1;
-        assert(collection1title1o.getString("TitleType").equals("Distinctive title (book); Cover title (serial); Title on item (serial content item or reviewed resource)"));
+        assert(collection1title1o.getString("TitleType").equals("Distinctive title (book); Cover title (serial); Title of content item, collection, or resource"));
 
         JSONArray collection1tel1 = collection1title1o.getJSONArray("TitleElements");
         Object collection1tel1o1 = collection1tel1.get(0);
@@ -107,7 +107,7 @@ public class AppTest
         JSONObject workidentifier1o = (JSONObject) workidentifier1;
         assert(workidentifier1o.getString("IDTypeName").equals("some proprietary id"));
         assert(workidentifier1o.getString("IDValue").equals("0000000000"));
-        assert(workidentifier1o.getString("WorkIDType").equals("Proprietary"));
+        assert(workidentifier1o.getString("WorkIDType").equals("Proprietary work ID scheme"));
 
         Object workidentifier2 = workidentifiers.get(1);
         JSONObject workidentifier2o = (JSONObject) workidentifier2;
@@ -131,7 +131,7 @@ public class AppTest
         Object td1 = titledetails.get(0);
         JSONObject td1o = (JSONObject)td1;
 
-        assert(td1o.getString("TitleType").equals("Distinctive title (book); Cover title (serial); Title on item (serial content item or reviewed resource)"));
+        assert(td1o.getString("TitleType").equals("Distinctive title (book); Cover title (serial); Title of content item, collection, or resource"));
 
         JSONArray te = td1o.getJSONArray("TitleElements");
         Object te1 = te.get(0);
@@ -239,7 +239,7 @@ public class AppTest
         Object txtcont1t1 = txtcont1t.get(0);
         String txtcont1t1o = (String)txtcont1t1;
         assert(txtcont1t1o.equals("Some text."));
-        assert(txtcont1o.getString("TextType").equals("Short description/annotation"));
+        assert(txtcont1o.getString("TextType").equals("Short description / annotation"));
 
         Object txtcont2 = textcontent.get(1);
         JSONObject txtcont2o = (JSONObject)txtcont2;
